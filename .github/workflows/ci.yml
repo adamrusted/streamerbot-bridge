@@ -2,7 +2,7 @@ name: CI
 
 on:
   pull_request:
-    branches: [main]
+    branches: [dev, main]
 
 concurrency:
   group: ci-${{ github.event.pull_request.number }}
@@ -31,21 +31,19 @@ jobs:
             [ "$r" = success ] || exit 1
           done
 
-  # Squash-merges once CI passes, then starts release.yml by hand: a merge made with
-  # GITHUB_TOKEN doesn't trigger push workflows, but workflow_dispatch is exempt. Skips the
-  # release PR (merging it is how a release is cut) and PRs from forks.
+  # Squash-merges PRs into dev once CI passes. PRs into main (dev promotions and the release
+  # PR) are merged by hand, because that is when a release is chosen. Skips PRs from forks.
   merge:
     needs: ci-passed
     if: >-
       github.event.pull_request.head.repo.full_name == github.repository &&
-      !startsWith(github.head_ref, 'release-please--')
+      github.base_ref == 'dev'
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
-      actions: write
     steps:
-      - name: Squash-merge and start release
+      - name: Squash-merge
         env:
           GH_TOKEN: ${{ github.token }}
           PR_URL: ${{ github.event.pull_request.html_url }}
@@ -62,4 +60,3 @@ jobs:
           # --match-head-commit refuses to merge anything newer than what CI tested.
           gh pr merge "$PR_URL" --squash --delete-branch --match-head-commit "$HEAD_SHA" \
             --subject "$title (#${{ github.event.pull_request.number }})" --body "$body"
-          gh workflow run release.yml --repo "$GITHUB_REPOSITORY" --ref main

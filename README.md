@@ -147,4 +147,4 @@ Copy `sb-bridge.config.example.json` to `sb-bridge.config.json` and keep only th
 
 `pnpm test` runs the tests, including an end-to-end test that drives the bridge with the official `@streamerbot/client`. `pnpm typecheck` checks types. `pnpm dev` restarts on change. See `AGENTS.md` for architecture and conventions.
 
-PR titles must be [conventional commits](https://www.conventionalcommits.org/) (`feat: …`, `fix: …`). PRs are squash-merged, and the titles drive version bumps and the changelog. See [docs/releasing.md](docs/releasing.md) for how CI, auto-merge and releases work.
+Branch from `dev` and open PRs against `dev`; `main` is only updated when `dev` is promoted for a release. PR titles must be [conventional commits](https://www.conventionalcommits.org/) (`feat: …`, `fix: …`). PRs are squash-merged, and the titles drive version bumps and the changelog. See [docs/releasing.md](docs/releasing.md) for how CI, auto-merge and releases work.

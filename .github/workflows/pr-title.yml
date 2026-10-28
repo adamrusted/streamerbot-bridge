@@ -1,10 +1,11 @@
 name: PR title
 
-# PRs are squash-merged, so the title becomes the commit message release-please reads.
-# Separate from ci.yml so editing a title doesn't re-run the build matrix.
+# PRs into dev are squash-merged, so the title becomes the commit message release-please reads.
+# PRs into main are dev promotions (merge commits, so their titles never reach release-please)
+# or the release PR. Separate from ci.yml so editing a title doesn't re-run the build matrix.
 on:
   pull_request:
-    branches: [main]
+    branches: [dev]
     types: [opened, edited, synchronize, reopened]
 
 permissions:

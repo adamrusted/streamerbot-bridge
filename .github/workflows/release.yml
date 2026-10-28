@@ -1,9 +1,9 @@
 name: Release
 
-# On every push to main, release-please keeps a release PR open that bumps the version and
-# CHANGELOG from conventional commits. Merging that PR creates the tag and GitHub release, and
-# the build job then attaches the executables to it. ci.yml starts this by workflow_dispatch
-# after its bot merges, because those merges don't fire push.
+# Work lands on dev; merging dev into main (with a merge commit) pushes to main. On every push
+# to main, release-please keeps a release PR open that bumps the version and CHANGELOG from
+# conventional commits. Merging that PR creates the tag and GitHub release, the build job
+# attaches the executables to it, and sync-dev merges the release commit back into dev.
 on:
   push:
     branches: [main]
@@ -38,3 +38,21 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       release_tag: ${{ needs.release-please.outputs.tag_name }}
+
+  # Brings the version bump and CHANGELOG back to dev so the two branches don't drift. A push
+  # made with GITHUB_TOKEN doesn't trigger workflows, so this doesn't start CI on dev.
+  sync-dev:
+    needs: release-please
+    if: needs.release-please.outputs.release_created == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: dev
+          fetch-depth: 0
+      - name: Merge main into dev
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git merge --no-edit origin/main
+          git push origin dev

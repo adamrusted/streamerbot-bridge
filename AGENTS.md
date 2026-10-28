@@ -30,6 +30,7 @@ Outbound, per app: Firebot presets / Aitum commands / Mix It Up commands / SAMMI
 
 - TypeScript runs natively on Node ≥ 23.6 (type stripping, no build step). Use erasable syntax only: no enums, no parameter properties, no namespaces. Imports end in `.ts`. Type-only imports use `import type`.
 - Use pnpm only; `npx` is rejected by `devEngines`. Done means `pnpm typecheck` and `pnpm test` both pass.
+- `dev` is the working branch: branch from it and target PRs at it. Never commit to or open feature PRs against `main`; `main` only receives `dev` (as a merge commit) and the release-please PR. See `docs/releasing.md`.
 - Commit messages and PR titles are conventional commits (`feat:`, `fix:`, `docs:`, `chore:` …; `!` or a `BREAKING CHANGE:` footer for breaking changes). release-please derives the version and `CHANGELOG.md` from them, so never edit `version` in `package.json` or the changelog by hand. Breaking changes include the user-facing contract: route names, body keys, config keys.
 - `test/streamerbot-client.test.ts` drives the bridge with the official `@streamerbot/client`, the same library widgets load. It is the strongest compatibility check; extend it when adding requests. Outbound adapter calls are tested against `startFakeApi` (`test/helpers.ts`).
 - The developer's machine may have live Firebot at `:7472`. GETs against it are safe for verifying shapes. Anything that runs effects, presets, commands, buttons or chat acts on a live stream, so ask first. Mix It Up (`:8911`) and SAMMI (`:9450`) were not running when their adapters were written.
