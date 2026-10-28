@@ -27,7 +27,9 @@ To run without Node installed, build a single executable:
 pnpm build:exe
 ```
 
-This writes `dist/sb-bridge.exe` (or `dist/sb-bridge` on macOS/Linux) along with `sb-bridge.config.example.json` and the `integrations/` folder. Copy the `dist` folder wherever you like. The executable looks for `sb-bridge.config.json` in the working directory first, then next to the executable. The build only targets the OS it runs on. CI builds Windows x64, macOS (Apple Silicon and Intel) and Linux (x64 and arm64), and every GitHub release has all five attached.
+This writes `dist/sb-bridge.exe` (or `dist/sb-bridge` on macOS/Linux) along with `sb-bridge.config.example.json` and the `integrations/` folder. Copy the `dist` folder wherever you like. The executable looks for `sb-bridge.config.json` in the working directory first, then next to the executable. The build only targets the OS it runs on.
+
+Every [GitHub release](https://github.com/adamrusted/streamerbot-bridge/releases) has a prebuilt executable for Windows x64, macOS (Apple Silicon and Intel) and Linux (x64 and arm64), plus `sb-bridge.js` (the Firebot script) and `sb-bridge.config.example.json`. Download the executable for your system and put the other two next to it. On macOS and Linux, make the executable runnable first: `chmod +x sb-bridge-*`. On macOS, also run `xattr -d com.apple.quarantine sb-bridge-*`, because the executable isn't notarized.
 
 sb-bridge listens on `ws://127.0.0.1:8080/`, the Streamer.bot default, so tools work without changing their settings. **Close Streamer.bot first** if it is installed, because both can't use port 8080.
 
