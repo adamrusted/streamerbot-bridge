@@ -1,0 +1,62 @@
+name: Build
+
+# Reusable: tests and builds the executable on every platform. ci.yml calls it for pull
+# requests; release.yml calls it with release_tag to attach the archives to a release.
+on:
+  workflow_call:
+    inputs:
+      release_tag:
+        description: Upload the archives to this existing GitHub release.
+        type: string
+        default: ''
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: windows-latest, target: windows-x64 }
+          - { os: macos-latest, target: macos-arm64 }
+          - { os: macos-15-intel, target: macos-x64 }
+          - { os: ubuntu-latest, target: linux-x64 }
+          - { os: ubuntu-24.04-arm, target: linux-arm64 }
+    name: ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # Installs the pnpm version pinned in package.json's packageManager field.
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 26
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build:exe
+
+      # tar keeps the executable bit, which upload-artifact's own zip would drop.
+      - name: Package (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: Compress-Archive -Path dist/* -DestinationPath sb-bridge-${{ matrix.target }}.zip
+      - name: Package (macOS/Linux)
+        if: runner.os != 'Windows'
+        run: tar -czf sb-bridge-${{ matrix.target }}.tar.gz -C dist .
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sb-bridge-${{ matrix.target }}
+          path: sb-bridge-${{ matrix.target }}.*
+          if-no-files-found: error
+
+      - name: Attach to release
+        if: inputs.release_tag != ''
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${{ inputs.release_tag }}" sb-bridge-${{ matrix.target }}.* --clobber --repo "$GITHUB_REPOSITORY"

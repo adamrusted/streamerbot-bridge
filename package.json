@@ -1,0 +1,44 @@
+{
+  "name": "sb-bridge",
+  "version": "0.1.0",
+  "description": "Emulates the Streamer.bot WebSocket API, fed by Firebot, Aitum Nexus and other streaming tools.",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "node src/cli.ts",
+    "dev": "node --watch src/cli.ts",
+    "build:exe": "node scripts/build-exe.ts",
+    "test": "node --test \"test/**/*.test.ts\"",
+    "typecheck": "tsc"
+  },
+  "keywords": [
+    "streamer.bot",
+    "firebot",
+    "aitum",
+    "websocket",
+    "overlay"
+  ],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=23.6"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.15.0",
+      "onFail": "download"
+    }
+  },
+  "packageManager": "pnpm@12.15.0",
+  "type": "module",
+  "dependencies": {
+    "ws": "^8.22.0"
+  },
+  "devDependencies": {
+    "@streamerbot/client": "^2.0.1",
+    "@types/node": "^26.6.5",
+    "@types/ws": "^8.18.2",
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2"
+  }
+}

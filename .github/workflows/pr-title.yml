@@ -1,0 +1,20 @@
+name: PR title
+
+# PRs are squash-merged, so the title becomes the commit message release-please reads.
+# Separate from ci.yml so editing a title doesn't re-run the build matrix.
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  pull-requests: read
+
+jobs:
+  lint:
+    name: Conventional PR title
+    runs-on: ubuntu-latest
+    steps:
+      - uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ github.token }}

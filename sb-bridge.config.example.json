@@ -1,0 +1,51 @@
+{
+  "logLevel": "info",
+  "instance": { "name": "Streamer.bot", "version": "1.0.1" },
+  "websocket": {
+    "host": "127.0.0.1",
+    "port": 8080,
+    "endpoint": "/",
+    "authentication": { "enabled": false, "password": "" }
+  },
+  "httpServer": { "enabled": true, "host": "127.0.0.1", "port": 7474 },
+  "ingestToken": "",
+  "broadcaster": {
+    "twitch": { "login": "", "displayName": "", "userId": "" },
+    "kick": { "login": "" }
+  },
+  "pronouns": { "enabled": true },
+  "enrichment": {
+    "enabled": true,
+    "timeoutMs": 1500,
+    "users": true,
+    "rolesAndSubs": true,
+    "badges": true,
+    "emotes": true
+  },
+  "activeViewerWindowMinutes": 30,
+  "firebot": {
+    "enabled": true,
+    "baseUrl": "http://127.0.0.1:7472",
+    "pollIntervalMs": 30000,
+    "emitUnmappedAsCustom": false
+  },
+  "aitum": {
+    "enabled": false,
+    "baseUrl": "http://127.0.0.1:7777",
+    "pollIntervalMs": 30000
+  },
+  "mixitup": {
+    "enabled": false,
+    "baseUrl": "http://127.0.0.1:8911",
+    "pollIntervalMs": 30000,
+    "ignoreRequirements": true
+  },
+  "sammi": {
+    "enabled": false,
+    "baseUrl": "http://127.0.0.1:9450",
+    "password": "",
+    "pollIntervalMs": 30000,
+    "actions": [],
+    "globals": []
+  }
+}
